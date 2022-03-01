@@ -7,22 +7,32 @@ import pandas as pd
 SapObject = win32com.client.Dispatch("Sap2000v16.SapObject")
 SapObject.ApplicationStart()
 SapModel = SapObject.SapModel
-SapModel.InitializeNewModel()
 
-filename = r"C:\Users\User\Desktop\SAP\sap_interacao\teste2\ITERAÇÃO SOLO - ESTRUTURA\22.02.18.TESC silo.SDB"
+def start_up():
 
-ret = SapModel.File.OpenFile(filename)
+    SapModel.InitializeNewModel()
 
-ret = SapModel.SetModeIsLocked(False)
+    filename = r"C:\Users\User\Desktop\SAP\sap_interacao\teste2\ITERAÇÃO SOLO - ESTRUTURA\22.02.18.TESC silo.SDB"
 
-ret = SapModel.View.RefreshView(0, False)
+    ret = SapModel.File.OpenFile(filename)
+    if ret == 0:
+        print('Model Loaded')
 
-ret = SapModel.File.Save(filename)
+    ret = SapModel.SetModelIsLocked(False)
 
-ret = SapModel.Analyze.RunAnalysis()
+    ret = SapModel.View.RefreshView(0, False)
 
-ret = SapModel.Results.Setup.DeselectAllCasesAndCombosForOutput
-ret = SapModel.Results.Setup.SetComboSelectedForOutput("COMB1")
+    ret = SapModel.File.Save(filename)
+
+    print('Running Analysis...')
+    ret = SapModel.Analyze.RunAnalysis()
+    
+
+    ret = SapModel.Results.Setup.DeselectAllCasesAndCombosForOutput
+    ret = SapModel.Results.Setup.SetComboSelectedForOutput("COMB1")
+
+    print('Analysis finished.')
+    
 
 def springs_names():
     _, numberOfPoints, pointsName = SapModel.PointObj.GetNameList()
